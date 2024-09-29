@@ -86,7 +86,6 @@ const updateProfile = async (req, res) => {
         user.lastname = last_name || user.lastname;
         user.bio = bio || user.bio;
         user.isOnline = isOnline !== undefined ? isOnline : user.isOnline;
-        user.email = email || user.email;
         user.dob = dob || user.dob;
         user.gender = gender || user.gender;
         user.looking_for = looking_for || user.looking_for;
@@ -104,10 +103,16 @@ const updateProfile = async (req, res) => {
       const isUserNameExists = await User.findOne({
         username: req.body.username,
       });
+      const isEmailExists = await User.findOne({ email: req.body.email });
       if (isUserNameExists) {
         return res
           .status(200)
           .json({ message: "Username already exists", success: false });
+      }
+      if (isEmailExists) {
+        return res
+          .status(200)
+          .json({ message: "Email already exists", success: false });
       }
       user.username = username || user.username;
       user.firstname = first_name || user.firstname;
