@@ -17,7 +17,7 @@ router.post("/register-otp", async (req, res) => {
     let user = await User.findOne({ phone });
 
     if (user) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "User already registered with this phone number.",
       });
@@ -27,14 +27,20 @@ router.post("/register-otp", async (req, res) => {
         .services(process.env.TWILIO_SERVICE_SID)
         .verifications.create({ to: phone, channel: "sms" });
 
-      return res.status(200).json({ message: "OTP sent successfully!" });
+      return res
+        .status(200)
+        .json({ message: "OTP sent successfully!", success: true });
     } catch (otpError) {
       console.error("Error sending OTP:", otpError);
-      return res.status(500).json({ message: "Failed to send OTP." });
+      return res
+        .status(500)
+        .json({ message: "Failed to send OTP.", success: false });
     }
   } catch (error) {
     console.error("Error processing registration:", error);
-    return res.status(500).json({ message: "Internal server error." });
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", success: false });
   }
 });
 
@@ -44,7 +50,6 @@ router.post("/login-otp", async (req, res) => {
   try {
     let user = await User.findOne({ phone });
 
-    console.log(user);
     if (!user) {
       return res.status(200).send({
         success: false,
@@ -56,14 +61,20 @@ router.post("/login-otp", async (req, res) => {
         .services(process.env.TWILIO_SERVICE_SID)
         .verifications.create({ to: phone, channel: "sms" });
 
-      return res.status(200).json({ message: "OTP sent successfully!" });
+      return res
+        .status(200)
+        .json({ message: "OTP sent successfully!", success: true });
     } catch (otpError) {
       console.error("Error sending OTP:", otpError);
-      return res.status(200).json({ message: "Failed to send OTP." });
+      return res
+        .status(200)
+        .json({ message: "Failed to send OTP.", success: false });
     }
   } catch (error) {
     console.error("Error processing registration:", error);
-    return res.status(500).json({ message: "Internal server error." });
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", success: false });
   }
 });
 
