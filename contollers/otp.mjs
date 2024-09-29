@@ -91,7 +91,7 @@ router.post("/verify-otp", async (req, res) => {
       let user = await User.findOne({ phone });
 
       if (!user) {
-        user = new User({ phone });
+        user = new User({ phone, email: null });
         await user.save();
       }
       return res.status(200).json({
