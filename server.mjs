@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { connectDB } from "./config/db.mjs";
 import router from "./contollers/otp.mjs";
 import authRouter from "./routes/authRoutes.mjs";
+import bodyParser from "body-parser";
 
 // Load environment variables
 dotenv.config();
@@ -20,6 +21,7 @@ connectDB();
 app.locals.ablyRealtime = ablyRealtime;
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Define Routes
 app.use("/api/users", router);
