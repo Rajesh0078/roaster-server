@@ -52,7 +52,6 @@ const updateProfile = async (req, res) => {
     first_name,
     last_name,
     bio,
-    password,
     isOnline,
     email,
     dob,
@@ -100,10 +99,10 @@ const updateProfile = async (req, res) => {
           .json({ user, message: "User Updated successfully" });
       });
     } else {
-      const isUserNameExists = await User.findOne({
-        username: req.body.username,
-      });
-      const isEmailExists = await User.findOne({ email: req.body.email });
+      const isUserNameExists = username
+        ? await User.findOne({ username })
+        : null;
+      const isEmailExists = email ? await User.findOne({ email }) : null;
       if (isUserNameExists) {
         return res
           .status(200)
@@ -138,7 +137,7 @@ const updateProfile = async (req, res) => {
           token: newToken,
           messgae: "User Created Successfully",
           success: true,
-        }); // Send updated user data with new token
+        });
       } else {
         await user.save();
         return res.json({
