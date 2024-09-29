@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getMyProfile,
   imageUpload,
   loginCtrl,
   updateProfile,
@@ -22,6 +23,7 @@ const upload = multer({ storage });
 
 authRouter.post("/update", updateProfile);
 authRouter.post("/login", loginCtrl);
+authRouter.get("/me", getMyProfile);
 authRouter.post(
   "/upload-images",
   upload.fields([
