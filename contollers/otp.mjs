@@ -44,8 +44,9 @@ router.post("/login-otp", async (req, res) => {
   try {
     let user = await User.findOne({ phone });
 
+    console.log(user);
     if (!user) {
-      return res.status(400).json({
+      return res.status(200).send({
         success: false,
         message: "User not found!",
       });
@@ -58,7 +59,7 @@ router.post("/login-otp", async (req, res) => {
       return res.status(200).json({ message: "OTP sent successfully!" });
     } catch (otpError) {
       console.error("Error sending OTP:", otpError);
-      return res.status(500).json({ message: "Failed to send OTP." });
+      return res.status(200).json({ message: "Failed to send OTP." });
     }
   } catch (error) {
     console.error("Error processing registration:", error);
@@ -71,28 +72,23 @@ router.post("/verify-otp", async (req, res) => {
   const { phone, otp } = req.body;
 
   try {
-    // Verify the OTP
     const verificationCheck = await client.verify.v2
       .services(process.env.TWILIO_SERVICE_SID)
       .verificationChecks.create({ to: phone, code: otp });
 
     if (verificationCheck.status === "approved") {
-      // Register user after successful OTP verification
       let user = await User.findOne({ phone });
 
-      // Create a new user instance if it doesn't exist
       if (!user) {
-        user = new User({ phone }); // Create a new user instance
-        await user.save(); // Save the user
+        user = new User({ phone });
+        await user.save();
       }
-
-      // Send the user data back to the client
       return res.status(200).json({
         message: "User registered successfully.",
         user,
       });
     } else {
-      return res.status(400).json({ message: "Invalid OTP" });
+      return res.status(200).json({ message: "Invalid OTP", success: false });
     }
   } catch (error) {
     console.error("Error verifying OTP:", error);

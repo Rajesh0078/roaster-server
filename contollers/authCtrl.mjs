@@ -18,7 +18,7 @@ const loginCtrl = async (req, res) => {
     let user = await User.findOne({ phone });
 
     if (!user) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "User not found!",
       });
@@ -38,7 +38,7 @@ const loginCtrl = async (req, res) => {
         success: true,
       });
     } else {
-      return res.status(400).json({ message: "Invalid OTP", success: false });
+      return res.status(200).json({ message: "Invalid OTP", success: false });
     }
   } catch (error) {
     console.error("Error verifying OTP:", error);
@@ -71,7 +71,7 @@ const updateProfile = async (req, res) => {
 
     if (!user) {
       return res
-        .status(404)
+        .status(200)
         .json({ message: "User not found", success: false });
     }
 
