@@ -25,6 +25,10 @@ app.use(express.json());
 app.use("/api/users", router);
 app.use("/api/users", authRouter);
 
+app.get("/", (req, res) => {
+  res.send("Server Started");
+});
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
