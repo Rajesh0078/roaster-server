@@ -82,7 +82,6 @@ const updateProfile = async (req, res) => {
             .status(401)
             .json({ message: "Invalid token", success: false });
         }
-        user.username = username || user.username;
         user.firstname = first_name || user.firstname;
         user.lastname = last_name || user.lastname;
         user.bio = bio || user.bio;
@@ -102,6 +101,14 @@ const updateProfile = async (req, res) => {
           .json({ user, message: "User Updated successfully" });
       });
     } else {
+      const isUserNameExists = await User.findOne({
+        username: req.body.username,
+      });
+      if (isUserNameExists) {
+        return res
+          .status(200)
+          .json({ message: "Username already exists", success: false });
+      }
       user.username = username || user.username;
       user.firstname = first_name || user.firstname;
       user.lastname = last_name || user.lastname;
