@@ -155,4 +155,64 @@ const updateProfile = async (req, res) => {
   }
 };
 
-export { updateProfile, loginCtrl };
+const imageUpload = async (req, res) => {
+  try {
+    const { phone } = req.body;
+    const profilePicture = req.files["profile_picture"];
+    const photos = req.files["photos"];
+
+    // Find user by phone number
+    const user = await User.findOne({ phone });
+    if (!user) {
+      return res.status(200).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+
+    // Construct base URL for uploaded images
+    const baseUrl = `${req.protocol}://${req.get("host")}/uploads/`;
+
+    // Prepare image URLs
+    const imageUrls = {
+      profile_picture: null,
+      photos: [],
+    };
+
+    // Only proceed to upload if the user is found
+    if (profilePicture && profilePicture.length > 0) {
+      imageUrls.profile_picture = `${baseUrl}${profilePicture[0].filename}`;
+    }
+
+    if (photos && photos.length > 0) {
+      imageUrls.photos = photos.map((file) => `${baseUrl}${file.filename}`);
+    }
+
+    // Update user's profile with new image URLs
+    if (imageUrls.profile_picture) {
+      user.profile_picture = imageUrls.profile_picture;
+    }
+
+    // Append new photos to existing array
+    user.photos = user.photos.concat(imageUrls.photos);
+
+    // Save the updated user document
+    await user.save();
+
+    // Return the updated user data in response
+    res.status(200).json({
+      message: "Images uploaded successfully",
+      user,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error uploading images:", error);
+    res.status(500).json({
+      message: "Error uploading images",
+      error: error.message,
+      success: false,
+    });
+  }
+};
+
+export { updateProfile, loginCtrl, imageUpload };

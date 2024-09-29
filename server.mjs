@@ -27,6 +27,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api/users", router);
 app.use("/api/users", authRouter);
 
+app.use("/uploads", express.static("uploads"));
+
 app.get("/", (req, res) => {
   res.send("Server Started");
 });
