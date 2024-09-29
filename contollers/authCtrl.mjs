@@ -144,4 +144,4 @@ const updateProfile = async (req, res) => {
   }
 };
 
-export { updateProfile };
+export { updateProfile, loginCtrl };
