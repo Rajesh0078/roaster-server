@@ -231,7 +231,7 @@ const getMyProfile = async (req, res) => {
     }
     return res
       .status(200)
-      .json({ message: "user retrieved succefully", success: false, user });
+      .json({ message: "user retrieved succefully", success: true, user });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error", success: false });
