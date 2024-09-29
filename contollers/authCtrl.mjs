@@ -126,26 +126,13 @@ const updateProfile = async (req, res) => {
       user.photos = photos || user.photos;
       user.profile_picture = profile_picture || user.profile_picture;
       user.location = location || user.location;
-      if (profile_picture) {
-        const newToken = jwt.sign({ userId: user._id }, JWT_SECRET, {
-          expiresIn: "1h",
-        });
-        user.isRegistered = true;
-        await user.save();
-        return res.status(200).json({
-          user,
-          token: newToken,
-          messgae: "User Created Successfully",
-          success: true,
-        });
-      } else {
-        await user.save();
-        return res.json({
-          user,
-          messgae: "User Created Successfully",
-          success: true,
-        });
-      }
+
+      await user.save();
+      return res.json({
+        user,
+        messgae: "User Created Successfully",
+        success: true,
+      });
     }
   } catch (error) {
     console.error(error);
@@ -198,13 +185,26 @@ const imageUpload = async (req, res) => {
 
     // Save the updated user document
     await user.save();
-
-    // Return the updated user data in response
-    res.status(200).json({
-      message: "Images uploaded successfully",
+    if (user.isRegistered) {
+      return res.status(200).json({
+        message: "Images uploaded successfully",
+        user,
+        success: true,
+      });
+    }
+    const newToken = jwt.sign({ userId: user._id }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    user.isRegistered = true;
+    await user.save();
+    return res.status(200).json({
       user,
+      token: newToken,
+      messgae: "User Created Successfully",
       success: true,
     });
+
+    // Return the updated user data in response
   } catch (error) {
     console.error("Error uploading images:", error);
     res.status(500).json({
