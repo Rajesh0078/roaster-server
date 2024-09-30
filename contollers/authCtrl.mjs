@@ -159,7 +159,7 @@ const imageUpload = async (req, res) => {
       });
     }
     const newToken = jwt.sign({ userId: user._id }, JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "10d",
     });
     user.isRegistered = true;
     await user.save();
