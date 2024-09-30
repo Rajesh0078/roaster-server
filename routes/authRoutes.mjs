@@ -2,7 +2,6 @@ import express from "express";
 import {
   getMyProfile,
   imageUpload,
-  loginCtrl,
   updateProfile,
 } from "../contollers/authCtrl.mjs";
 import multer from "multer";
@@ -22,7 +21,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 authRouter.post("/update", updateProfile);
-authRouter.post("/login", loginCtrl);
 authRouter.get("/me", getMyProfile);
 authRouter.post(
   "/upload-images",

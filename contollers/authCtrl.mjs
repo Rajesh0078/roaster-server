@@ -12,40 +12,6 @@ const client = twilio(accountSid, authToken);
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
 
-const loginCtrl = async (req, res) => {
-  const { phone, otp } = req.body;
-  try {
-    let user = await User.findOne({ phone });
-
-    if (!user) {
-      return res.status(200).json({
-        success: false,
-        message: "User not found!",
-      });
-    }
-    const verificationCheck = await client.verify.v2
-      .services(process.env.TWILIO_SERVICE_SID)
-      .verificationChecks.create({ to: phone, code: otp });
-
-    if (verificationCheck.status === "approved") {
-      const newToken = jwt.sign({ userId: user._id }, JWT_SECRET, {
-        expiresIn: "1h",
-      });
-      return res.status(200).json({
-        message: "User login successfully.",
-        user,
-        token: newToken,
-        success: true,
-      });
-    } else {
-      return res.status(200).json({ message: "Invalid OTP", success: false });
-    }
-  } catch (error) {
-    console.error("Error verifying OTP:", error);
-    return res.status(500).json({ message: "Failed to verify OTP." });
-  }
-};
-
 const updateProfile = async (req, res) => {
   const {
     username,
@@ -238,4 +204,4 @@ const getMyProfile = async (req, res) => {
   }
 };
 
-export { updateProfile, loginCtrl, imageUpload, getMyProfile };
+export { updateProfile, imageUpload, getMyProfile };
