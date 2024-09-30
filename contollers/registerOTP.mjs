@@ -38,7 +38,7 @@ resgisterRouter.post("/register-otp", async (req, res) => {
     // Check if an unverified OTP already exists for the phone number
     const existingOtp = await OTP.findOne({ phone, verified: false });
     if (existingOtp) {
-      return res.status(400).json({
+      return res.status(200).json({
         message: "OTP already sent. Please wait.",
       });
     }
@@ -113,7 +113,7 @@ resgisterRouter.post("/register-verify-otp", async (req, res) => {
 
     // Check if OTP has already been verified
     if (otpRecord.verified) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "OTP has already been verified.",
       });

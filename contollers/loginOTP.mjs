@@ -41,7 +41,7 @@ loginRouter.post("/login-otp", async (req, res) => {
     // Check if an unverified OTP already exists for the phone number
     const existingOtp = await OTP.findOne({ phone, verified: false });
     if (existingOtp) {
-      return res.status(400).json({
+      return res.status(200).json({
         message: "OTP already sent. Please wait.",
       });
     }
