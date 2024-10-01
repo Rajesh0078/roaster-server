@@ -44,7 +44,7 @@ const updateProfile = async (req, res) => {
       jwt.verify(token, JWT_SECRET, async (err, decoded) => {
         if (err) {
           return res
-            .status(401)
+            .status(200)
             .json({ message: "Invalid token", success: false });
         }
         user.firstname = first_name || user.firstname;
@@ -218,4 +218,34 @@ const getMyProfile = async (req, res) => {
   }
 };
 
-export { updateProfile, imageUpload, getMyProfile };
+const getAllProfiles = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res
+        .status(200)
+        .json({ message: "No token provided", success: false });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err.name === "TokenExpiredError") {
+        return res
+          .status(200)
+          .json({ message: "Token expired", success: false });
+      }
+      return res.status(200).json({ message: "Invalid token", success: false });
+    }
+    const users = await User.find();
+    return res
+      .status(200)
+      .json({ message: "Users fetched successfully", success: true, users });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error", success: false });
+  }
+};
+
+export { updateProfile, imageUpload, getMyProfile, getAllProfiles };

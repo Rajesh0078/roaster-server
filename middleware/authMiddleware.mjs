@@ -18,8 +18,8 @@ export const authMiddleware = (req, res, next) => {
     req.user = {
       id: decoded.id, // Get user ID from token
       email: decoded.email, // Get user email from token
-    }; // Attach user information to the request object
-    next(); // Call the next middleware or route handler
+    };
+    next();
   } catch (error) {
     console.error(error);
     res.status(400).json({

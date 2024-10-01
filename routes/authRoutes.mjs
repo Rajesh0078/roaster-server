@@ -22,6 +22,7 @@ const upload = multer({ storage });
 
 authRouter.post("/update", updateProfile);
 authRouter.get("/me", getMyProfile);
+authRouter.get("/all-users", getMyProfile);
 authRouter.post(
   "/upload-images",
   upload.fields([
