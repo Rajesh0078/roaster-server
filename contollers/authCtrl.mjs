@@ -185,19 +185,33 @@ const getMyProfile = async (req, res) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      return res.status(401).json({ message: "No token provided" });
+      return res
+        .status(200)
+        .json({ message: "No token provided", success: false });
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId);
 
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err.name === "TokenExpiredError") {
+        return res
+          .status(200)
+          .json({ message: "Token expired", success: false });
+      }
+      return res.status(200).json({ message: "Invalid token", success: false });
+    }
+
+    const user = await User.findById(decoded.userId);
     if (!user) {
       return res
-        .status(404)
+        .status(200)
         .json({ message: "User not found", success: false });
     }
+
     return res
       .status(200)
-      .json({ message: "user retrieved succefully", success: true, user });
+      .json({ message: "User retrieved successfully", success: true, user });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error", success: false });
