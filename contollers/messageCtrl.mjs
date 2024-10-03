@@ -116,7 +116,7 @@ export const getChatList = async (req, res) => {
       id: chat._id,
       sender: chat.sender,
       recipient: chat.recipient,
-      lastMessage: chat.content,
+      message: chat.content,
       timestamp: chat.timestamp,
       seen: chat.seen,
       edited: chat.edited,
