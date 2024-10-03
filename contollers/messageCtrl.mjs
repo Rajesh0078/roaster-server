@@ -109,7 +109,7 @@ export const getChatList = async (req, res) => {
     // Find chats where the user is either the sender or the recipient
     const chats = await Message.find({
       $or: [{ sender: userId }, { recipient: userId }],
-    }).sort({ timestamp: -1 });
+    }).sort({ timestamp: 1 });
 
     // Format the chat list
     const chatList = chats.map((chat) => ({
