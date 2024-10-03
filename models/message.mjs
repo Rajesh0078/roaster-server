@@ -44,7 +44,8 @@ const messageSchema = new Schema(
     },
   },
   {
-    timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
+    timestamps: true,
+    versionKey: false,
   }
 );
 

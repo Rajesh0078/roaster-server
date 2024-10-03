@@ -163,9 +163,9 @@ export const getMyConvo = async (req, res) => {
       if (!chatList[otherUserId]) {
         chatList[otherUserId] = {
           recipientId: otherUserId,
-          lastMessage: message,
-          profile_pic: null,
           username: "",
+          profile_pic: null,
+          lastMessage: message,
         };
       }
 
@@ -178,7 +178,7 @@ export const getMyConvo = async (req, res) => {
     // Fetch user profile pictures for all unique users in chatList
     const userIds = Object.keys(chatList);
     const users = await User.find({ _id: { $in: userIds } }).select(
-      "profile_picture"
+      "profile_picture username"
     );
     // Map user profile pictures to the chat list
     users.forEach((user) => {
