@@ -7,6 +7,7 @@ import authRouter from "./routes/authRoutes.mjs";
 import bodyParser from "body-parser";
 import resgisterRouter from "./contollers/registerOTP.mjs";
 import loginRouter from "./contollers/loginOTP.mjs";
+import { chatRouter } from "./routes/chatRoute.mjs";
 
 // Load environment variables
 dotenv.config();
@@ -28,6 +29,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api/users", resgisterRouter);
 app.use("/api/users", loginRouter);
 app.use("/api/users", authRouter);
+app.use("/api/chat", chatRouter);
 
 app.use("/uploads", express.static("uploads"));
 
