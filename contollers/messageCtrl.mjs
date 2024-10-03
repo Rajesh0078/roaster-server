@@ -160,12 +160,12 @@ export const getMyConvo = async (req, res) => {
         ? message.recipient
         : message.sender;
 
-      // If this user ID is not already in the chat list, add it
       if (!chatList[otherUserId]) {
         chatList[otherUserId] = {
           recipientId: otherUserId,
           lastMessage: message,
-          userProfilePic: null,
+          profile_pic: null,
+          username: "",
         };
       }
 
@@ -183,7 +183,8 @@ export const getMyConvo = async (req, res) => {
     // Map user profile pictures to the chat list
     users.forEach((user) => {
       if (chatList[user._id]) {
-        chatList[user._id].userProfilePic = user["profile_picture"];
+        chatList[user._id].profile_pic = user.profile_picture;
+        chatList[user._id].username = user.username;
       }
     });
 
